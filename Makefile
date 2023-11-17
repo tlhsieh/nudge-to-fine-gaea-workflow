@@ -494,14 +494,17 @@ netcdf_batches_config_validation: $(addsuffix _netcdf_batches_config_validation,
 # training and validation datasets.
 train: netcdf_batches_config $(addprefix train_, $(PREDICTAND_SETS))
 train_%:
+	TMPDIR=/scratch/cimes/$(USER)/scratch \
 	sbatch --output=$(SLURM_LOG_DIR)/train-%j.out --time=16:00:00 --mem-per-cpu=16G \
-	$(TRAIN) \
+	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	python -m fv3fit.train \
 	$(TRAINING_CONFIG_WILDCARD) \
 	$(TRAINING_BATCHES_CONFIG_WILDCARD) \
-	$(VALIDATION_BATCHES_CONFIG_WILDCARD) \
-	$(MODEL_WILDCARD)
+	$(MODEL_WILDCARD) \
+    --validation-data-config=$(VALIDATION_BATCHES_CONFIG_WILDCARD) \
+    --no-wandb
 
 
 # Offline reports; these naturally require trained ML models.

@@ -25,11 +25,6 @@ export MPLBACKEND=Agg  # Required for running non-interactively
 DIAGS="${DESTINATION}/diags.nc"
 METRICS="${DESTINATION}/metrics.json"
 
-TEMPORARY_DIRECTORY=${ROOT}/$(uuidgen)
-mkdir -p ${TEMPORARY_DIRECTORY}
-cd ${TEMPORARY_DIRECTORY}
 prognostic_run_diags save ${FLAGS} "${RUN}" "${DIAGS}"
 prognostic_run_diags metrics "${DIAGS}" > "${METRICS}"
 prognostic_run_diags movie ${FLAGS} "${RUN}" "${DESTINATION}"
-cd -
-# rm -rf ${TEMPORARY_DIRECTORY}

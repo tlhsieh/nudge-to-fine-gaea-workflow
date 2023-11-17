@@ -19,15 +19,9 @@ source ${FV3NET_DIR}/.environment-scripts/activate_environment.sh \
     ${INSTALL_PREFIX} \
     ${CONDA_ENVIRONMENT}
 
-
-TEMPORARY_DIRECTORY=/scratch/cimes/${USER}/scratch/$(uuidgen)-training
-mkdir -p ${TEMPORARY_DIRECTORY}
-cd ${TEMPORARY_DIRECTORY}
 python -m fv3fit.train \
        ${TRAINING_CONFIG} \
        ${TRAINING_DATA_CONFIG} \
        ${DESTINATION} \
        --validation-data-config=${VALIDATION_DATA_CONFIG} \
        --no-wandb
-cd -
-rm -rf ${TEMPORARY_DIRECTORY}
