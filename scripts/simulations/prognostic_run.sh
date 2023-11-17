@@ -27,7 +27,7 @@ source ${FV3NET_DIR}/.environment-scripts/activate_environment.sh \
     ${INSTALL_PREFIX} \
     ${CONDA_ENVIRONMENT}
 
-# Output environment to stdout for prevenance
+# Output environment to stdout for provenance
 conda list
 
 RST_COUNT=${DESTINATION}/restart/rst.count
