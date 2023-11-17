@@ -11,3 +11,5 @@ eval "$(conda shell.bash hook)"
 cd $FV3NET_DIR
 bash ${SCRIPTS}/build_environment.sh ${ENVIRONMENT_NAME}
 bash ${SCRIPTS}/install_local_packages.sh ${ENVIRONMENT_NAME}
+conda run --name ${ENVIRONMENT_NAME} \
+    cartopy_feature_download.py gshhs physical cultural
