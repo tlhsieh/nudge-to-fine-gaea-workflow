@@ -193,8 +193,6 @@ rename_verification_variables_%:
 	$(RENAMED_VERIFICATION_ROOT)/$*
 
 
-# TODO: add a rule for generating the catalog.yaml file from a template.  Should
-# we have some way of downloading the reference data?
 build_catalog:
 	$(COPY_CATALOG_REFERENCE_DATA) $(CATALOG_DIR)
 	$(CONDA_RUN) \
@@ -331,7 +329,7 @@ ml_corrected_run: ml_corrected_run_config
 # ML datasets; we can only run these rules after running the nudged simulation,
 # which generates the data we use for ML training, validation, and testing.
 flux_training_validation_testing_zarr:
-	sbatch --output=$(SLURM_LOG_DIR)/radiative-flux-dataset-%j.out --time=01:00:00 --mem-per-cpu=8G \
+	sbatch -W --output=$(SLURM_LOG_DIR)/radiative-flux-dataset-%j.out --time=01:00:00 --mem-per-cpu=8G \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -441,7 +439,7 @@ fill_validation_data_mapper_templates:
 	$(FLUXES_VALIDATION_MAPPER)
 
 
-netcdf_batches: netcdf_batches_training netcdf_batches_validation
+netcdf_batches: flux_training_validation_testing_zarr fill_data_mapper_templates netcdf_batches_training netcdf_batches_validation
 
 
 netcdf_batches_training: $(addsuffix _netcdf_batches_training, $(PREDICTAND_SETS))
@@ -494,7 +492,7 @@ netcdf_batches_config_validation: $(addsuffix _netcdf_batches_config_validation,
 
 # ML training; we can only run these rules after generating the requisite
 # training and validation datasets.
-train: $(addprefix train_, $(PREDICTAND_SETS))
+train: netcdf_batches_config $(addprefix train_, $(PREDICTAND_SETS))
 train_%:
 	sbatch --output=$(SLURM_LOG_DIR)/train-%j.out --time=16:00:00 --mem-per-cpu=16G \
 	$(TRAIN) \
@@ -524,7 +522,7 @@ offline_report_%:
 
 
 vertically_interpolated_reference:
-	sbatch --output=$(SLURM_LOG_DIR)/interpolate-%j.out --time=03:00:00 --mem-per-cpu=16G \
+	sbatch -W --output=$(SLURM_LOG_DIR)/interpolate-%j.out --time=03:00:00 --mem-per-cpu=16G \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -534,7 +532,7 @@ vertically_interpolated_reference:
 
 
 # Prognostic run diagnostics
-prognostic_run_diags: $(addprefix prognostic_run_diags_, $(SIMULATIONS))
+prognostic_run_diags: vertically_interpolated_reference $(addprefix prognostic_run_diags_, $(SIMULATIONS))
 prognostic_run_diags_%:
 	sbatch --output=$(SLURM_LOG_DIR)/prognostic-run-diags-%j.out \
 	$(PROGNOSTIC_RUN_DIAGS) \
