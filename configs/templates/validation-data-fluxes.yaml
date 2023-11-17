@@ -1,0 +1,29 @@
+catalog_path: {{ CATALOG }}
+mapper_config:
+  function: open_zarr
+  kwargs:
+    data_path: {{ RADIATIVE_FLUX_DATASET }}
+shuffle_samples: false
+shuffle_timesteps: false
+timesteps:
+- '20200125.013000'
+- '20200128.193000'
+- '20200201.073000'
+- '20200201.103000'
+- '20200202.193000'
+- '20200206.103000'
+- '20200208.103000'
+- '20200209.163000'
+- '20200212.103000'
+- '20200213.223000'
+timesteps_per_batch: 10
+unstacked_dims:
+- z
+variable_names:
+- cos_zenith_angle
+- surface_geopotential
+- air_temperature
+- specific_humidity
+- latitude
+- shortwave_transmissivity_of_atmospheric_column
+- override_for_time_adjusted_total_sky_downward_longwave_flux_at_surface

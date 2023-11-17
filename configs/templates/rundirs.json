@@ -1,0 +1,11 @@
+[
+    {
+      "url": "{{ SIMULATION_ROOT }}/baseline/online-diags",
+      "name": "baseline"
+    },
+    {
+      "url": "{{ SIMULATION_ROOT }}/ml-corrected/online-diags",
+      "name": "ml-corrected-tquv-rad"
+    }
+]
+  

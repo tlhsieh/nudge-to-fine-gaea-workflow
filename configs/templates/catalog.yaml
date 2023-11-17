@@ -1,0 +1,99 @@
+plugins:
+  source:
+    - module: intake_xarray
+sources:
+  grid/c48:
+    description: Lat, lon, and area of C48 data
+    driver: zarr
+    metadata:
+      grid: c48
+      variables:
+        - area
+        - lat
+        - latb
+        - lon
+        - lonb
+    args:
+      urlpath: "{{ CATALOG_DIR }}/c48.zarr/"
+      consolidated: true
+
+  landseamask/c48:
+    description: land_sea_mask of C48 data
+    driver: zarr
+    metadata:
+      grid: c48
+      variables:
+        - land_sea_mask
+    args:
+      urlpath: "{{ CATALOG_DIR }}/land_sea_mask.zarr/"
+      consolidated: true
+
+  wind_rotation/c48:
+    description: Rotation matrix components transforming x/y components to lat/lon
+    driver: zarr
+    metadata:
+      grid: c48
+      variables:
+        - eastward_wind_u_coeff
+        - eastward_wind_v_coeff
+        - northward_wind_u_coeff
+        - northward_wind_v_coeff
+        - x_unit_vector
+        - y_unit_vector
+        - lat_unit_vector
+        - lon_unit_vector
+    args:
+      urlpath: "{{ CATALOG_DIR }}/wind_rotation_matrix_correct_factor.zarr/"
+      consolidated: true
+
+  verification_surface:
+    description: 2D physics fields output every 3 hours
+    driver: zarr
+    metadata:
+      grid: c48
+      simulation: pire_xshield_control
+      category: 2d
+    args:
+      storage_options:
+        access: read_only
+      urlpath: "{{ CATALOG_DIR }}/pire_atmos_phys_3h_coarse.zarr"
+      consolidated: True
+
+  verification_atmosphere:
+    description: 2D atmosphere fields output every 3 hours
+    driver: zarr
+    metadata:
+      grid: c48
+      simulation: pire_xshield_control
+      category: 2d
+    args:
+      storage_options:
+        access: read_only
+      urlpath: "{{ CATALOG_DIR }}/pire_atmos_dyn_plev_coarse_3h.zarr"
+      consolidated: True
+
+  verification_atmosphere_column_integrated:
+    description: 2D atmosphere fields output every 3 hours
+    driver: zarr
+    metadata:
+      grid: c48
+      simulation: pire_xshield_control
+      category: 2d
+    args:
+      storage_options:
+        access: read_only
+      urlpath: "{{ CATALOG_DIR }}/pire_atmos_dyn_3h_coarse_inst.zarr"
+      consolidated: True
+
+  verification_atmosphere_3d:
+    description: 3D atmosphere fields output every 3 hours
+    driver: zarr
+    metadata:
+      grid: c48
+      simulation: pire_xshield_control
+      category: 3d
+    args:
+      storage_options:
+        access: read_only
+      urlpath: "{{ CATALOG_DIR }}/vertically_interpolated_reference.zarr"
+      consolidated: True
