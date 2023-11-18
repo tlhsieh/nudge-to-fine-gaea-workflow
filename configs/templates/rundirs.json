@@ -1,10 +1,10 @@
 [
     {
-      "url": "{{ SIMULATION_ROOT }}/baseline/online-diags",
+      "url": "{{ SIMULATION_ROOT }}/baseline/prognostic-run-diags",
       "name": "baseline"
     },
     {
-      "url": "{{ SIMULATION_ROOT }}/ml-corrected/online-diags",
+      "url": "{{ SIMULATION_ROOT }}/ml-corrected/prognostic-run-diags",
       "name": "ml-corrected-tquv-rad"
     }
 ]

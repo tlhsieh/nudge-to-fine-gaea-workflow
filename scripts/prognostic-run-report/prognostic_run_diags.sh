@@ -27,4 +27,4 @@ METRICS="${DESTINATION}/metrics.json"
 
 prognostic_run_diags save ${FLAGS} "${RUN}" "${DIAGS}"
 prognostic_run_diags metrics "${DIAGS}" > "${METRICS}"
-prognostic_run_diags movie ${FLAGS} "${RUN}" "${DESTINATION}"
+# prognostic_run_diags movie ${FLAGS} "${RUN}" "${DESTINATION}"
