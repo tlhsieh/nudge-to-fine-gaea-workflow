@@ -439,7 +439,7 @@ fill_validation_data_mapper_templates:
 	$(FLUXES_VALIDATION_MAPPER)
 
 
-netcdf_batches: flux_training_validation_testing_zarr fill_data_mapper_templates netcdf_batches_training netcdf_batches_validation
+netcdf_batches: fill_data_mapper_templates flux_training_validation_testing_zarr netcdf_batches_training netcdf_batches_validation
 
 
 netcdf_batches_training: $(addsuffix _netcdf_batches_training, $(PREDICTAND_SETS))
@@ -461,8 +461,7 @@ netcdf_batches_validation: $(addsuffix _netcdf_batches_validation, $(PREDICTAND_
 	$(FV3NET_IMAGE_ENVIRONMENT) \
 	python -m loaders.batches.save \
 	$(VALIDATION_MAPPER_WILDCARD) \
-	$(ML_VALIDATION_DATA)/$* \
-	$(ML_CONFIG_DIR)/$*-batches-validation.yaml
+	$(ML_VALIDATION_DATA)/$*
 
 
 netcdf_batches_config: netcdf_batches_config_training netcdf_batches_config_validation
