@@ -3,7 +3,7 @@ ROOT=$(shell pwd)
 FV3NET_COMMIT=92c808d13748f165d9fdaa8c0c7714f82f024eea
 PROGNOSTIC_RUN_ENVIRONMENT=fv3net-prognostic-run
 FV3NET_IMAGE_ENVIRONMENT=fv3net-image
-EXPERIMENT_NAME=C384#TLH
+EXPERIMENT_NAME=C48_ic#TLH
 # EXPERIMENT_NAME=example
 SCRATCH_ROOT=/scratch/cimes/$(USER)/$(EXPERIMENT_NAME)
 
@@ -21,11 +21,9 @@ ENVIRONMENT_SCRIPTS=$(SCRIPTS_DIR)/environment
 # Local grid and verification data catalog
 CATALOG_SCRIPTS=$(SCRIPTS_DIR)/catalog
 CATALOG_DIR=$(SCRATCH_ROOT)/catalog
-COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data_C384.sh#TLH
-# COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data.sh
+COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data.sh
 FILL_CATALOG_TEMPLATE=$(CATALOG_SCRIPTS)/fill_template.py
-CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog_C384.yaml#TLH
-# CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog.yaml
+CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog.yaml
 CATALOG=$(CONFIG_DIR)/catalog.yaml
 
 # Verification data
@@ -33,8 +31,7 @@ VERIFICATION_TAG=pire_xshield_control
 VERIFICATION_DATASETS = pire_atmos_dyn_3h_coarse_inst.zarr pire_atmos_phys_3h_coarse.zarr pire_atmos_dyn_plev_coarse_3h.zarr
 VERIFICATION_SCRIPTS=$(SCRIPTS_DIR)/verification
 RENAME_VERIFICATION_VARIABLES=$(VERIFICATION_SCRIPTS)/rename_verification_variables.py
-RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_1x/diagnostics#TLH
-# RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/diagnostics
+RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/diagnostics
 RENAMED_VERIFICATION_ROOT=$(CATALOG_DIR)
 
 # Variables for prescriber dataset generation
@@ -42,8 +39,7 @@ PRESCRIBER_SCRIPTS=$(SCRIPTS_DIR)/prescriber
 LAND_PRESCRIBER_SCRIPT=$(PRESCRIBER_SCRIPTS)/land.py
 OCEAN_PRESCRIBER_SCRIPT=$(PRESCRIBER_SCRIPTS)/ocean.py
 
-RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_1x/restarts#TLH
-# RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/restarts
+RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/restarts
 
 PRESCRIBER_DATASETS=$(SCRATCH_ROOT)/prescriber
 LAND_PRESCRIBER_DATASET=$(PRESCRIBER_DATASETS)/land.zarr
@@ -105,8 +101,7 @@ TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 
 # Simulations
-SIMULATION_NTASKS=384#TLH 384
-# SIMULATION_NTASKS=24
+SIMULATION_NTASKS=24
 SIMULATION_SEGMENTS=1#TLH
 # SIMULATION_SEGMENTS=4
 SIMULATION_SCRIPTS=$(SCRIPTS_DIR)/simulations
@@ -118,11 +113,9 @@ FV3CONFIG_REFERENCE_DIR=$(SCRATCH_ROOT)/fv3config-reference
 COPY_FV3CONFIG_DATA=$(SIMULATION_SCRIPTS)/copy_fv3config_data.sh
 FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT=$(SIMULATION_SCRIPTS)/fill_template.py
 
-BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_C384.yaml#TLH
-# BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_ic.yaml#TLH
+BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_ic.yaml#TLH
 # BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline.yaml
-NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_C384.yaml#TLH
-# NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_ic.yaml#TLH
+NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_ic.yaml#TLH
 # NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged.yaml
 ML_CORRECTED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected.yaml
 BASELINE_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline.yaml
@@ -260,9 +253,8 @@ baseline_run_config:
 	$(BASELINE_RUN_CONFIG)
 
 
-# SBATCH_TIMELIMIT=02:30:00 #TLH
 baseline_run: baseline_run_config
-	SBATCH_TIMELIMIT=24:30:00 \
+	SBATCH_TIMELIMIT=02:30:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
@@ -291,9 +283,8 @@ nudged_run_config:
 	$(NUDGED_RUN_CONFIG)
 
 
-# SBATCH_TIMELIMIT=02:30:00 #TLH
 nudged_run: nudged_run_config
-	SBATCH_TIMELIMIT=24:30:00 \
+	SBATCH_TIMELIMIT=02:30:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \

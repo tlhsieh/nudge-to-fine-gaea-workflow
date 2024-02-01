@@ -8,6 +8,8 @@ import xarray as xr
 
 from pathlib import Path
 
+import datetime
+import cftime
 
 PRESSURES = [1000, 925, 850, 700, 500, 200, 50]
 PIRE_TO_EXPECTED_NAMES = {
@@ -28,6 +30,12 @@ def rename(ds):
     return ds.rename(rename_vars)
 
 
+def clear_encoding(ds):
+    for var in ds.variables:
+        ds[var].encoding = {}
+    return ds
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("source", help="path to source dataset")
@@ -35,6 +43,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     ds = xr.open_zarr(args.source)
+
+    DAYS = 10 # 42
+    RESTARTS_PER_DAY = 8
+    RESTART_PERIODS = DAYS * RESTARTS_PER_DAY
+    START_DATE = cftime.DatetimeJulian(2020, 1, 19)
+    END_DATE = START_DATE + datetime.timedelta(days=DAYS)
+    ds = ds.sel(time=slice(START_DATE, END_DATE))
+    # ds = ds.isel(time=range(91*8-1, (91+42)*8-1))
+    print(ds.time[0], ds.time[-1])
+    
     renamed = rename(ds)
+    renamed = clear_encoding(renamed).chunk({"time": 16})
     with dask.diagnostics.ProgressBar():
         renamed.to_zarr(args.destination)
