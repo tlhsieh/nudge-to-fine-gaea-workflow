@@ -14,7 +14,7 @@ sources:
         - lon
         - lonb
     args:
-      urlpath: "{{ CATALOG_DIR }}/c384.zarr/"
+      urlpath: "{{ CATALOG_DIR }}/grid_spec.zarr/"
       consolidated: true
 
   landseamask/c384:
