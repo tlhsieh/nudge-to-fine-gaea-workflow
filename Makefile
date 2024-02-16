@@ -3,7 +3,7 @@ ROOT=$(shell pwd)
 FV3NET_COMMIT=92c808d13748f165d9fdaa8c0c7714f82f024eea
 PROGNOSTIC_RUN_ENVIRONMENT=fv3net-prognostic-run
 FV3NET_IMAGE_ENVIRONMENT=fv3net-image
-# EXPERIMENT_NAME=C192#TLH
+# EXPERIMENT_NAME=C192
 EXPERIMENT_NAME=C384_home#TLH
 # EXPERIMENT_NAME=example
 SCRATCH_ROOT=/scratch/cimes/$(USER)/$(EXPERIMENT_NAME)
@@ -22,11 +22,11 @@ ENVIRONMENT_SCRIPTS=$(SCRIPTS_DIR)/environment
 # Local grid and verification data catalog
 CATALOG_SCRIPTS=$(SCRIPTS_DIR)/catalog
 CATALOG_DIR=$(SCRATCH_ROOT)/catalog
-# COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data_C192.sh#TLH
+# COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data_C192.sh
 COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data_C384.sh#TLH
 # COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data.sh
 FILL_CATALOG_TEMPLATE=$(CATALOG_SCRIPTS)/fill_template.py
-# CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog_C192.yaml#TLH
+# CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog_C192.yaml
 CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog_C384.yaml#TLH
 # CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog.yaml
 CATALOG=$(CONFIG_DIR)/catalog.yaml
@@ -36,7 +36,7 @@ VERIFICATION_TAG=pire_xshield_control
 VERIFICATION_DATASETS = pire_atmos_dyn_3h_coarse_inst.zarr pire_atmos_phys_3h_coarse.zarr pire_atmos_dyn_plev_coarse_3h.zarr
 VERIFICATION_SCRIPTS=$(SCRIPTS_DIR)/verification
 RENAME_VERIFICATION_VARIABLES=$(VERIFICATION_SCRIPTS)/rename_verification_variables.py
-# RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_2x/diagnostics#TLH C192
+# RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_2x/diagnostics# C192
 RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_1x/diagnostics#TLH C384
 # RAW_VERIFICATION_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/diagnostics
 RENAMED_VERIFICATION_ROOT=$(CATALOG_DIR)
@@ -46,7 +46,7 @@ PRESCRIBER_SCRIPTS=$(SCRIPTS_DIR)/prescriber
 LAND_PRESCRIBER_SCRIPT=$(PRESCRIBER_SCRIPTS)/land.py
 OCEAN_PRESCRIBER_SCRIPT=$(PRESCRIBER_SCRIPTS)/ocean.py
 
-# RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_2x/restarts#TLH C192
+# RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_2x/restarts# C192
 RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/coarsened_by_1x/restarts#TLH C384
 # RESTARTS_ROOT=/scratch/cimes/skclark/2023-09-18-PIRE-X-SHiELD-post-processing/processed/control/restarts
 
@@ -110,7 +110,7 @@ TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 
 # Simulations
-SIMULATION_NTASKS=384#TLH 384 1536
+SIMULATION_NTASKS=408#TLH 384 1536
 # SIMULATION_NTASKS=24
 SIMULATION_SEGMENTS=1#TLH
 # SIMULATION_SEGMENTS=4
@@ -123,13 +123,13 @@ FV3CONFIG_REFERENCE_DIR=$(SCRATCH_ROOT)/fv3config-reference
 COPY_FV3CONFIG_DATA=$(SIMULATION_SCRIPTS)/copy_fv3config_data.sh
 FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT=$(SIMULATION_SCRIPTS)/fill_template.py
 
-# BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_C192.yaml#TLH
+# BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_C192.yaml
 BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_C384.yaml#TLH
-# BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_ic.yaml#TLH
+# BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_ic.yaml
 # BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline.yaml
-# NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_C192.yaml#TLH
+# NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_C192.yaml
 NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_C384.yaml#TLH
-# NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_ic.yaml#TLH
+# NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_ic.yaml
 # NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged.yaml
 ML_CORRECTED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected.yaml
 BASELINE_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline.yaml
@@ -269,13 +269,14 @@ baseline_run_config:
 
 # SBATCH_TIMELIMIT=02:30:00 #TLH
 baseline_run: baseline_run_config
-	SBATCH_TIMELIMIT=24:30:00 \
+	SBATCH_TIMELIMIT=24:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
 	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
 	--ntasks=$(SIMULATION_NTASKS) \
 	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--nodelist=stellar-m05n[11-16] \
 	$(PROGNOSTIC_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -300,13 +301,15 @@ nudged_run_config:
 
 # SBATCH_TIMELIMIT=02:30:00 #TLH
 nudged_run: nudged_run_config
-	SBATCH_TIMELIMIT=30:30:00 \
+	SBATCH_TIMELIMIT=24:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
 	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
 	--ntasks=$(SIMULATION_NTASKS) \
 	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--nodelist=stellar-m05n[11-16] \
+	--qos=cimes-short \
 	$(PROGNOSTIC_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
