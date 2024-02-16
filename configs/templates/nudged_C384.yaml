@@ -47,7 +47,7 @@ namelist:
     # dt_atmos: 900
     # dt_ocean: 900
     use_hyper_thread: false # TLH
-    ncores_per_node: 68 # TLH
+    ncores_per_node: 128 # TLH
   diag_manager_nml:
     flush_nc_files: true
   fv_core_nml:
