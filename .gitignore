@@ -1,0 +1,6 @@
+clone/
+configs/catalog.yaml
+configs/simulations/
+install/
+scripts/prescriber/__pycache__/
+slurm-logs/

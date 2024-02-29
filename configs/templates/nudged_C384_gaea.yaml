@@ -36,7 +36,6 @@ nudging:
   restarts_path: {{ RESTARTS_ROOT }}
 namelist:
   coupler_nml:
-    # days: 1
     days: 10
     hours: 0
     minutes: 0
@@ -58,9 +57,6 @@ namelist:
     layout:
      - 8
      - 8
-    # layout:
-    #  - 2
-    #  - 2
   # gfdl_cloud_microphysics_nml:
   #   mp_time: 150.0
   #   fast_sat_adj: true
