@@ -36,7 +36,7 @@ nudging:
   restarts_path: {{ RESTARTS_ROOT }}
 namelist:
   coupler_nml:
-    days: 10
+    days: 5
     hours: 0
     minutes: 0
     months: 0
