@@ -44,13 +44,12 @@ if __name__ == "__main__":
     
     ds = xr.open_zarr(args.source)
 
-    DAYS = 10 # 42
+    DAYS = 42
     RESTARTS_PER_DAY = 8
     RESTART_PERIODS = DAYS * RESTARTS_PER_DAY
-    START_DATE = cftime.DatetimeJulian(2020, 1, 19)
+    START_DATE = cftime.DatetimeJulian(2020, 1, 29)
     END_DATE = START_DATE + datetime.timedelta(days=DAYS)
     ds = ds.sel(time=slice(START_DATE, END_DATE))
-    # ds = ds.isel(time=range(91*8-1, (91+42)*8-1))
     print(ds.time[0], ds.time[-1])
     
     renamed = rename(ds)

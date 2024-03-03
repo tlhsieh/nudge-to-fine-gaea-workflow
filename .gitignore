@@ -5,3 +5,4 @@ install/
 scripts/prescriber/__pycache__/
 slurm-logs/
 *-fv3config.yml
+Makefile
