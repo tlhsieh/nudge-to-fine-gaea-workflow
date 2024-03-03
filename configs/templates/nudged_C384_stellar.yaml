@@ -2,13 +2,13 @@ base_version: v0.7
 field_table: {{ FV3CONFIG_REFERENCE_DIR }}/config/field_table/TKE-EDMF/v1.1/field_table
 initial_conditions:
   base_url: {{ RESTARTS_ROOT }}
-  timestep: "20200119.000000"
+  timestep: "20200129.000000"
   vertical_coordinate_file: {{ RESTARTS_ROOT }}/fv_core.res.nc
 orographic_forcing: {{ FV3CONFIG_REFERENCE_DIR }}/data/orographic_data/v1.0
 forcing: {{ FV3CONFIG_REFERENCE_DIR }}/data/base_forcing/v1.1
 prephysics:
   - dataset_key: {{ PRESCRIBER_DATASETS }}/ocean.zarr
-    reference_initial_time: "20200119.000000"
+    reference_initial_time: "20200129.000000"
     reference_frequency_seconds: 10800
     variables:
       ocean_surface_temperature: ocean_surface_temperature  # Duplicated implicitly when nudging
@@ -16,7 +16,7 @@ prephysics:
       sea_ice_thickness: sea_ice_thickness
       ice_fraction_over_open_water: ice_fraction_over_open_water
   - dataset_key: {{ PRESCRIBER_DATASETS }}/land.zarr
-    reference_initial_time: "20200118.223000"
+    reference_initial_time: "20200128.223000"
     reference_frequency_seconds: 10800
     variables:
       override_for_time_adjusted_total_sky_downward_shortwave_flux_at_surface: override_for_time_adjusted_total_sky_downward_shortwave_flux_at_surface
@@ -30,13 +30,12 @@ nudging:
     eastward_wind: 3
     northward_wind: 3
     pressure_thickness_of_atmospheric_layer: 3
-  reference_initial_time: "20200119.000000" #TLH
-  # reference_initial_time: "20190119.000000"
+  reference_initial_time: "20190119.000000"
   reference_frequency_seconds: 10800
   restarts_path: {{ RESTARTS_ROOT }}
 namelist:
   coupler_nml:
-    days: 1
+    days: 5
     hours: 0
     minutes: 0
     months: 0
@@ -56,8 +55,8 @@ namelist:
     k_split: 3
     n_split: 6
     layout:
-     - 8
-     - 8
+     - 12
+     - 12
   # gfdl_cloud_microphysics_nml:
   #   mp_time: 150.0
   #   fast_sat_adj: true
