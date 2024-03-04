@@ -109,8 +109,8 @@ TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 
 # Simulations
-SIMULATION_NTASKS=864#TLH 384 1536
-SIMULATION_SEGMENTS=1#TLH
+SIMULATION_NTASKS=864# 384 864 1536
+SIMULATION_SEGMENTS=1#
 SIMULATION_SCRIPTS=$(SCRIPTS_DIR)/simulations
 PROGNOSTIC_RUN=$(SIMULATION_SCRIPTS)/prognostic_run.sh
 SIMULATIONS = baseline nudged ml-corrected
@@ -258,9 +258,10 @@ baseline_run_config:
 	$(BASELINE_RUN_CONFIG)
 
 
-#TLH
+#	--nodelist=stellar-m05n[11-16] \
+#	--qos=cimes-short
 baseline_run: baseline_run_config
-	SBATCH_TIMELIMIT=60:00:00 \
+	SBATCH_TIMELIMIT=24:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
@@ -289,11 +290,8 @@ nudged_run_config:
 	$(NUDGED_RUN_CONFIG)
 
 
-#TLH
-#	--nodelist=stellar-m05n[11-16] \
-#	--qos=cimes-short
 nudged_run: nudged_run_config
-	SBATCH_TIMELIMIT=60:00:00 \
+	SBATCH_TIMELIMIT=24:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \

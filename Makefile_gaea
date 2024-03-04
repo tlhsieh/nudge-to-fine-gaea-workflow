@@ -102,8 +102,8 @@ TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 
 # Simulations
-SIMULATION_NTASKS=384#TLH 384 864 1536
-SIMULATION_SEGMENTS=1#TLH
+SIMULATION_NTASKS=384# 384 864 1536
+SIMULATION_SEGMENTS=1
 SIMULATION_SCRIPTS=$(SCRIPTS_DIR)/simulations
 PROGNOSTIC_RUN=$(SIMULATION_SCRIPTS)/prognostic_run.sh
 SIMULATIONS = baseline nudged ml-corrected
@@ -180,13 +180,15 @@ initialize_experiment:
 # Run this immediately after the initialize_experiment rule.  fv3net expects
 # variable names in the verification data to be named a certain way, which was
 # not entirely how variables were named in the PIRE simulation outputs.
+#	--mem-per-cpu=8G 
 rename_verification_variables: $(addprefix rename_verification_variables_, $(VERIFICATION_DATASETS))
 rename_verification_variables_%:
 	sbatch \
 	--output=$(SLURM_LOG_DIR)/rename-verification-variables-%j.out \
 	--time=01:00:00 \
-	--mem-per-cpu=8G \
 	--ntasks=4 \
+	--cluster=c5 \
+	--qos=debug \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -217,6 +219,8 @@ prescriber_datasets: ocean_prescriber_dataset land_prescriber_dataset
 
 ocean_prescriber_dataset:
 	sbatch --output=$(SLURM_LOG_DIR)/ocean-prescriber-dataset-%j.out --time=01:00:00 \
+	--cluster=c5 \
+	--qos=debug \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -227,6 +231,8 @@ ocean_prescriber_dataset:
 
 land_prescriber_dataset:
 	sbatch --output=$(SLURM_LOG_DIR)/land-prescriber-dataset-%j.out --time=01:00:00 \
+	--cluster=c5 \
+	--qos=debug \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -251,7 +257,6 @@ baseline_run_config:
 	$(BASELINE_RUN_CONFIG)
 
 
-#TLH
 baseline_run: baseline_run_config
 	SBATCH_TIMELIMIT=16:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
@@ -284,7 +289,6 @@ nudged_run_config:
 	$(NUDGED_RUN_CONFIG)
 
 
-#TLH
 nudged_run: nudged_run_config
 	SBATCH_TIMELIMIT=16:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \

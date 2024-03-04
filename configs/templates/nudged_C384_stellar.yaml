@@ -35,7 +35,7 @@ nudging:
   restarts_path: {{ RESTARTS_ROOT }}
 namelist:
   coupler_nml:
-    days: 5
+    days: 1
     hours: 0
     minutes: 0
     months: 0
@@ -125,7 +125,7 @@ diagnostics:
   # - pressure_thickness_of_atmospheric_layer_tendency_due_to_nudging
 - name: diags.zarr
   chunks:
-    time: 8
+    time: 1
     # time: 96
   times:
     frequency: 900
@@ -153,7 +153,7 @@ diagnostics:
 fortran_diagnostics:
 - name: sfc_dt_atmos.zarr
   chunks:
-    time: 8
+    time: 1
     # time: 80
   times:
     frequency: 10800
@@ -206,7 +206,7 @@ fortran_diagnostics:
   # - {module_name: gfs_sfc, field_name: SOILT4, output_name: SOILT4}
 - name: atmos_dt_atmos.zarr
   chunks:
-    time: 8
+    time: 1
   times:
     frequency: 10800
     kind: interval
