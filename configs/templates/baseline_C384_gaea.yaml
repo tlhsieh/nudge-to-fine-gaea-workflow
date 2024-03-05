@@ -17,7 +17,7 @@ prephysics:
       ice_fraction_over_open_water: ice_fraction_over_open_water
 namelist:
   coupler_nml:
-    days: 10
+    days: 8
     hours: 0
     minutes: 0
     months: 0
@@ -49,8 +49,7 @@ namelist:
 fortran_diagnostics:
 - name: sfc_dt_atmos.zarr
   chunks:
-    time: 20
-    # time: 80
+    time: 1
   times:
     frequency: 10800
     kind: interval
@@ -95,8 +94,7 @@ fortran_diagnostics:
   # - {module_name: gfs_sfc, field_name: SOILT4, output_name: SOILT4}
 - name: atmos_dt_atmos.zarr
   chunks:
-    time: 20
-    # time: 80
+    time: 1
   times:
     frequency: 10800
     kind: interval
@@ -155,38 +153,36 @@ fortran_diagnostics:
 diagnostics:
 - name: diags.zarr
   chunks:
-    time: 20
-    # time: 96
+    time: 1
   times:
-    frequency: 900
-    kind: interval
+    frequency: 10800
+    kind: interval-average
   variables:
   - total_precipitation_rate
-  - water_vapor_path
-  - physics_precip
+  # - water_vapor_path
+  # - physics_precip
 - name: state_after_timestep.zarr
   times:
     kind: interval-average
     frequency: 86400
   chunks:
     time: 1
-    # time: 10
   variables:
   - eastward_wind
   - northward_wind
-  - vertical_wind
+  # - vertical_wind
   - air_temperature
   - specific_humidity
   - pressure_thickness_of_atmospheric_layer
-  - vertical_thickness_of_atmospheric_layer
+  # - vertical_thickness_of_atmospheric_layer
   - land_sea_mask
-  - surface_temperature
+  # - surface_temperature
   - surface_geopotential
-  - sensible_heat_flux
-  - latent_heat_flux
+  # - sensible_heat_flux
+  # - latent_heat_flux
   - total_precipitation
   - surface_precipitation_rate
-  - total_soil_moisture
+  # - total_soil_moisture
   - total_sky_downward_shortwave_flux_at_surface
   - total_sky_upward_shortwave_flux_at_surface
   - total_sky_downward_longwave_flux_at_surface
@@ -194,12 +190,12 @@ diagnostics:
   - total_sky_downward_shortwave_flux_at_top_of_atmosphere
   - total_sky_upward_shortwave_flux_at_top_of_atmosphere
   - total_sky_upward_longwave_flux_at_top_of_atmosphere
-  - clear_sky_downward_shortwave_flux_at_surface
-  - clear_sky_upward_shortwave_flux_at_surface
-  - clear_sky_downward_longwave_flux_at_surface
-  - clear_sky_upward_longwave_flux_at_surface
-  - clear_sky_upward_shortwave_flux_at_top_of_atmosphere
-  - clear_sky_upward_longwave_flux_at_top_of_atmosphere
+  # - clear_sky_downward_shortwave_flux_at_surface
+  # - clear_sky_upward_shortwave_flux_at_surface
+  # - clear_sky_downward_longwave_flux_at_surface
+  # - clear_sky_upward_longwave_flux_at_surface
+  # - clear_sky_upward_shortwave_flux_at_top_of_atmosphere
+  # - clear_sky_upward_longwave_flux_at_top_of_atmosphere
   - latitude
   - longitude
   - cloud_water_mixing_ratio

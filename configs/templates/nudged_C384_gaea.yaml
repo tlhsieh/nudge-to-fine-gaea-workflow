@@ -83,33 +83,33 @@ diagnostics:
   - pressure_thickness_of_atmospheric_layer
   # - vertical_thickness_of_atmospheric_layer
   - land_sea_mask
-  - surface_temperature
+  # - surface_temperature
   - surface_geopotential
-  - sensible_heat_flux
-  - latent_heat_flux
+  # - sensible_heat_flux
+  # - latent_heat_flux
   - total_precipitation
   - surface_diffused_shortwave_albedo
   - surface_precipitation_rate
-  - total_soil_moisture
-  - clear_sky_downward_shortwave_flux_at_surface
-  - clear_sky_upward_shortwave_flux_at_surface
-  - clear_sky_downward_longwave_flux_at_surface
-  - clear_sky_upward_longwave_flux_at_surface
-  - clear_sky_upward_shortwave_flux_at_top_of_atmosphere
-  - clear_sky_upward_longwave_flux_at_top_of_atmosphere
+  # - total_soil_moisture
+  # - clear_sky_downward_shortwave_flux_at_surface
+  # - clear_sky_upward_shortwave_flux_at_surface
+  # - clear_sky_downward_longwave_flux_at_surface
+  # - clear_sky_upward_longwave_flux_at_surface
+  # - clear_sky_upward_shortwave_flux_at_top_of_atmosphere
+  # - clear_sky_upward_longwave_flux_at_top_of_atmosphere
   - latitude
   - longitude
-- name: physics_tendencies.zarr
-  chunks:
-    time: 1
-  times:
-    frequency: 10800
-    kind: interval-average
-  variables:
-  - tendency_of_air_temperature_due_to_fv3_physics
-  - tendency_of_specific_humidity_due_to_fv3_physics
-  - tendency_of_eastward_wind_due_to_fv3_physics
-  - tendency_of_northward_wind_due_to_fv3_physics
+# - name: physics_tendencies.zarr
+#   chunks:
+#     time: 1
+#   times:
+#     frequency: 10800
+#     kind: interval-average
+#   variables:
+#   - tendency_of_air_temperature_due_to_fv3_physics
+#   - tendency_of_specific_humidity_due_to_fv3_physics
+#   - tendency_of_eastward_wind_due_to_fv3_physics
+#   - tendency_of_northward_wind_due_to_fv3_physics
 - name: nudging_tendencies.zarr
   chunks:
     time: 1
@@ -125,21 +125,19 @@ diagnostics:
 - name: diags.zarr
   chunks:
     time: 1
-    # time: 96
   times:
-    frequency: 900
-    kind: interval
+    frequency: 10800
+    kind: interval-average
   variables:
   - net_moistening_due_to_nudging
-  - column_heating_due_to_nudging
-  - net_mass_tendency_due_to_nudging
+  # - column_heating_due_to_nudging
+  # - net_mass_tendency_due_to_nudging
   - total_precipitation_rate
-  - water_vapor_path
-  - physics_precip
+  # - water_vapor_path
+  # - physics_precip
 - name: reference_state.zarr
   chunks:
     time: 1
-    # time: 80
   times:
     frequency: 10800
     kind: interval-average
@@ -153,7 +151,6 @@ fortran_diagnostics:
 - name: sfc_dt_atmos.zarr
   chunks:
     time: 1
-    # time: 80
   times:
     frequency: 10800
     kind: interval
