@@ -1,5 +1,7 @@
 clone/
 configs/catalog.yaml
+configs/machine-learning/*batches*.yaml
+configs/machine-learning/*data.yaml
 configs/simulations/
 install/
 scripts/prescriber/__pycache__/

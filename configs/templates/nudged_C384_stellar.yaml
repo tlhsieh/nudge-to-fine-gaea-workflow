@@ -55,8 +55,8 @@ namelist:
     k_split: 3
     n_split: 6
     layout:
-     - 12
-     - 12
+     - 8
+     - 8
   # gfdl_cloud_microphysics_nml:
   #   mp_time: 150.0
   #   fast_sat_adj: true
@@ -125,8 +125,7 @@ diagnostics:
   # - pressure_thickness_of_atmospheric_layer_tendency_due_to_nudging
 - name: diags.zarr
   chunks:
-    time: 1
-    # time: 96
+    time: 16
   times:
     frequency: 900
     kind: interval
@@ -140,7 +139,6 @@ diagnostics:
 - name: reference_state.zarr
   chunks:
     time: 1
-    # time: 80
   times:
     frequency: 10800
     kind: interval-average
@@ -154,7 +152,6 @@ fortran_diagnostics:
 - name: sfc_dt_atmos.zarr
   chunks:
     time: 1
-    # time: 80
   times:
     frequency: 10800
     kind: interval
