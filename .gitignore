@@ -3,6 +3,7 @@ configs/catalog.yaml
 configs/machine-learning/*batches*.yaml
 configs/machine-learning/*data.yaml
 configs/simulations/
+configs/templates/initial_date_0119/
 install/
 scripts/prescriber/__pycache__/
 slurm-logs/

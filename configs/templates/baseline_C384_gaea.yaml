@@ -87,7 +87,7 @@ fortran_diagnostics:
   - {module_name: gfs_phys, field_name: v10m, output_name: VGRD10m}
   - {module_name: gfs_phys, field_name: tmpmax2m, output_name: TMAX2m}
   - {module_name: gfs_phys, field_name: wind10mmax, output_name: MAXWIND10m}
-  # - {module_name: gfs_phys, field_name: soilm, output_name: SOILM}
+  - {module_name: gfs_phys, field_name: soilm, output_name: SOILM}
   # - {module_name: gfs_sfc, field_name: SOILT1, output_name: SOILT1}
   # - {module_name: gfs_sfc, field_name: SOILT2, output_name: SOILT2}
   # - {module_name: gfs_sfc, field_name: SOILT3, output_name: SOILT3}
@@ -108,12 +108,12 @@ fortran_diagnostics:
   - {module_name: dynamics, field_name: u850, output_name: UGRD850}
   - {module_name: dynamics, field_name: u500, output_name: UGRD500}
   - {module_name: dynamics, field_name: u200, output_name: UGRD200}
-  # - {module_name: dynamics, field_name: u50, output_name: UGRD50}
+  - {module_name: dynamics, field_name: u50, output_name: UGRD50}
   - {module_name: dynamics, field_name: vs, output_name: VGRDlowest}
   - {module_name: dynamics, field_name: v850, output_name: VGRD850}
   - {module_name: dynamics, field_name: v500, output_name: VGRD500}
   - {module_name: dynamics, field_name: v200, output_name: VGRD200}
-  # - {module_name: dynamics, field_name: v50, output_name: VGRD50}
+  - {module_name: dynamics, field_name: v50, output_name: VGRD50}
   - {module_name: dynamics, field_name: tm, output_name: TMP500_300}
   - {module_name: dynamics, field_name: tb, output_name: TMPlowest}
   - {module_name: dynamics, field_name: t850, output_name: TMP850}
@@ -146,8 +146,8 @@ fortran_diagnostics:
   - {module_name: dynamics, field_name: tq, output_name: PWAT}
   # - {module_name: dynamics, field_name: lw, output_name: VIL}
   # - {module_name: dynamics, field_name: iw, output_name: iw}
-  # - {module_name: dynamics, field_name: ke, output_name: kinetic_energy}
-  # - {module_name: dynamics, field_name: te, output_name: total_energy}
+  - {module_name: dynamics, field_name: ke, output_name: kinetic_energy}
+  - {module_name: dynamics, field_name: te, output_name: total_energy}
   # - {module_name: dynamics, field_name: column_fv_sat_adj_heating, output_name: column_fv_sat_adj_heating}
   # - {module_name: dynamics, field_name: column_fv_sat_adj_moistening, output_name: column_fv_sat_adj_moistening}
 diagnostics:
