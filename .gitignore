@@ -1,5 +1,6 @@
 clone/
 configs/catalog.yaml
+configs/rundirs.json
 configs/machine-learning/*batches*.yaml
 configs/machine-learning/*data.yaml
 configs/simulations/
