@@ -17,7 +17,7 @@ prephysics:
       ice_fraction_over_open_water: ice_fraction_over_open_water
 namelist:
   coupler_nml:
-    days: 8
+    days: 3
     hours: 0
     minutes: 0
     months: 0
@@ -161,45 +161,45 @@ diagnostics:
   - total_precipitation_rate
   - water_vapor_path
   - physics_precip
-- name: state_after_timestep.zarr
-  times:
-    kind: interval-average
-    frequency: 86400
-  chunks:
-    time: 1
-  variables:
-  - eastward_wind
-  - northward_wind
-  # - vertical_wind
-  - air_temperature
-  - specific_humidity
-  - pressure_thickness_of_atmospheric_layer
-  # - vertical_thickness_of_atmospheric_layer
-  - land_sea_mask
-  # - surface_temperature
-  - surface_geopotential
-  # - sensible_heat_flux
-  # - latent_heat_flux
-  - total_precipitation
-  - surface_precipitation_rate
-  # - total_soil_moisture
-  - total_sky_downward_shortwave_flux_at_surface
-  - total_sky_upward_shortwave_flux_at_surface
-  - total_sky_downward_longwave_flux_at_surface
-  - total_sky_upward_longwave_flux_at_surface
-  - total_sky_downward_shortwave_flux_at_top_of_atmosphere
-  - total_sky_upward_shortwave_flux_at_top_of_atmosphere
-  - total_sky_upward_longwave_flux_at_top_of_atmosphere
-  # - clear_sky_downward_shortwave_flux_at_surface
-  # - clear_sky_upward_shortwave_flux_at_surface
-  # - clear_sky_downward_longwave_flux_at_surface
-  # - clear_sky_upward_longwave_flux_at_surface
-  # - clear_sky_upward_shortwave_flux_at_top_of_atmosphere
-  # - clear_sky_upward_longwave_flux_at_top_of_atmosphere
-  - latitude
-  - longitude
-  - cloud_water_mixing_ratio
-  - cloud_ice_mixing_ratio 
-  - rain_mixing_ratio
-  - snow_mixing_ratio
-  - graupel_mixing_ratio
+# - name: state_after_timestep.zarr
+#   times:
+#     kind: interval-average
+#     frequency: 86400
+#   chunks:
+#     time: 1
+#   variables:
+#   - eastward_wind
+#   - northward_wind
+#   # - vertical_wind
+#   - air_temperature
+#   - specific_humidity
+#   - pressure_thickness_of_atmospheric_layer
+#   # - vertical_thickness_of_atmospheric_layer
+#   - land_sea_mask
+#   # - surface_temperature
+#   - surface_geopotential
+#   # - sensible_heat_flux
+#   # - latent_heat_flux
+#   - total_precipitation
+#   - surface_precipitation_rate
+#   # - total_soil_moisture
+#   - total_sky_downward_shortwave_flux_at_surface
+#   - total_sky_upward_shortwave_flux_at_surface
+#   - total_sky_downward_longwave_flux_at_surface
+#   - total_sky_upward_longwave_flux_at_surface
+#   - total_sky_downward_shortwave_flux_at_top_of_atmosphere
+#   - total_sky_upward_shortwave_flux_at_top_of_atmosphere
+#   - total_sky_upward_longwave_flux_at_top_of_atmosphere
+#   # - clear_sky_downward_shortwave_flux_at_surface
+#   # - clear_sky_upward_shortwave_flux_at_surface
+#   # - clear_sky_downward_longwave_flux_at_surface
+#   # - clear_sky_upward_longwave_flux_at_surface
+#   # - clear_sky_upward_shortwave_flux_at_top_of_atmosphere
+#   # - clear_sky_upward_longwave_flux_at_top_of_atmosphere
+#   - latitude
+#   - longitude
+#   - cloud_water_mixing_ratio
+#   - cloud_ice_mixing_ratio 
+#   - rain_mixing_ratio
+#   - snow_mixing_ratio
+#   - graupel_mixing_ratio

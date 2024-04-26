@@ -103,7 +103,7 @@ TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 # Simulations
 SIMULATION_NTASKS=384# 384 864 1536
-SIMULATION_SEGMENTS=1
+SIMULATION_SEGMENTS=8
 SIMULATION_SCRIPTS=$(SCRIPTS_DIR)/simulations
 PROGNOSTIC_RUN=$(SIMULATION_SCRIPTS)/prognostic_run.sh
 SIMULATIONS = baseline nudged ml-corrected
@@ -114,15 +114,42 @@ COPY_FV3CONFIG_DATA=$(SIMULATION_SCRIPTS)/copy_fv3config_data.sh
 FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT=$(SIMULATION_SCRIPTS)/fill_template.py
 
 BASELINE_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/baseline_C384_gaea.yaml
+BASELINE_RUN2_TEMPLATE=$(CONFIG_TEMPLATES)/baseline2_C384_gaea.yaml
+BASELINE_RUN3_TEMPLATE=$(CONFIG_TEMPLATES)/baseline3_C384_gaea.yaml
+BASELINE_RUN4_TEMPLATE=$(CONFIG_TEMPLATES)/baseline4_C384_gaea.yaml
 NUDGED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/nudged_C384_gaea.yaml
-ML_CORRECTED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected.yaml
+NUDGED_RUN2_TEMPLATE=$(CONFIG_TEMPLATES)/nudged2_C384_gaea.yaml
+NUDGED_RUN3_TEMPLATE=$(CONFIG_TEMPLATES)/nudged3_C384_gaea.yaml
+NUDGED_RUN4_TEMPLATE=$(CONFIG_TEMPLATES)/nudged4_C384_gaea.yaml
+ML_CORRECTED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected_C384_gaea.yaml
+ML_CORRECTED_RUN2_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected2_C384_gaea.yaml
+ML_CORRECTED_RUN3_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected3_C384_gaea.yaml
+ML_CORRECTED_RUN4_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected4_C384_gaea.yaml
 BASELINE_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline.yaml
+BASELINE_RUN2_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline2.yaml
+BASELINE_RUN3_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline3.yaml
+BASELINE_RUN4_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline4.yaml
 NUDGED_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/nudged.yaml
+NUDGED_RUN2_CONFIG=$(SIMULATION_CONFIG_DIR)/nudged2.yaml
+NUDGED_RUN3_CONFIG=$(SIMULATION_CONFIG_DIR)/nudged3.yaml
+NUDGED_RUN4_CONFIG=$(SIMULATION_CONFIG_DIR)/nudged4.yaml
 ML_CORRECTED_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected.yaml
+ML_CORRECTED_RUN2_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected2.yaml
+ML_CORRECTED_RUN3_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected3.yaml
+ML_CORRECTED_RUN4_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected4.yaml
 
 BASELINE_RUN=$(SIMULATION_ROOT)/baseline
+BASELINE_RUN2=$(SIMULATION_ROOT)/baseline2
+BASELINE_RUN3=$(SIMULATION_ROOT)/baseline3
+BASELINE_RUN4=$(SIMULATION_ROOT)/baseline4
 NUDGED_RUN=$(SIMULATION_ROOT)/nudged
+NUDGED_RUN2=$(SIMULATION_ROOT)/nudged2
+NUDGED_RUN3=$(SIMULATION_ROOT)/nudged3
+NUDGED_RUN4=$(SIMULATION_ROOT)/nudged4
 ML_CORRECTED_RUN=$(SIMULATION_ROOT)/ml-corrected
+ML_CORRECTED_RUN2=$(SIMULATION_ROOT)/ml-corrected2
+ML_CORRECTED_RUN3=$(SIMULATION_ROOT)/ml-corrected3
+ML_CORRECTED_RUN4=$(SIMULATION_ROOT)/ml-corrected4
 
 # Offline reports
 OFFLINE_REPORT=$(TRAINING_SCRIPTS)/offline_report.sh
@@ -180,7 +207,6 @@ initialize_experiment:
 # Run this immediately after the initialize_experiment rule.  fv3net expects
 # variable names in the verification data to be named a certain way, which was
 # not entirely how variables were named in the PIRE simulation outputs.
-#	--mem-per-cpu=8G 
 rename_verification_variables: $(addprefix rename_verification_variables_, $(VERIFICATION_DATASETS))
 rename_verification_variables_%:
 	sbatch \
@@ -258,7 +284,7 @@ baseline_run_config:
 
 
 baseline_run: baseline_run_config
-	SBATCH_TIMELIMIT=16:00:00 \
+	SBATCH_TIMELIMIT=5:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
@@ -276,6 +302,102 @@ baseline_run: baseline_run_config
 	$(SIMULATION_ROOT)/baseline
 
 
+baseline_run2_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(BASELINE_RUN2_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(BASELINE_RUN2_CONFIG)
+
+
+baseline_run2: baseline_run2_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(BASELINE_RUN2_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/baseline2
+
+
+baseline_run3_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(BASELINE_RUN3_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(BASELINE_RUN3_CONFIG)
+
+
+baseline_run3: baseline_run3_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(BASELINE_RUN3_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/baseline3
+
+
+baseline_run4_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(BASELINE_RUN4_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(BASELINE_RUN4_CONFIG)
+
+
+baseline_run4: baseline_run4_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(BASELINE_RUN4_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/baseline4
+
+
 nudged_run_config:
 	$(CONDA_RUN) \
 	$(ROOT) \
@@ -290,7 +412,7 @@ nudged_run_config:
 
 
 nudged_run: nudged_run_config
-	SBATCH_TIMELIMIT=16:00:00 \
+	SBATCH_TIMELIMIT=5:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
@@ -308,6 +430,102 @@ nudged_run: nudged_run_config
 	$(SIMULATION_ROOT)/nudged
 
 
+nudged_run2_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(NUDGED_RUN2_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(NUDGED_RUN2_CONFIG)
+
+
+nudged_run2: nudged_run2_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=normal \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(NUDGED_RUN2_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/nudged2
+
+
+nudged_run3_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(NUDGED_RUN3_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(NUDGED_RUN3_CONFIG)
+
+
+nudged_run3: nudged_run3_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=normal \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(NUDGED_RUN3_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/nudged3
+
+
+nudged_run4_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(NUDGED_RUN4_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(NUDGED_RUN4_CONFIG)
+
+
+nudged_run4: nudged_run4_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=normal \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(NUDGED_RUN4_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/nudged4
+
+
 ml_corrected_run_config:
 	$(CONDA_RUN) \
 	$(ROOT) \
@@ -322,13 +540,15 @@ ml_corrected_run_config:
 
 
 ml_corrected_run: ml_corrected_run_config
-	SBATCH_TIMELIMIT=02:30:00 \
+	SBATCH_TIMELIMIT=5:00:00 \
 	SLURM_NTASKS=$(SIMULATION_NTASKS) \
 	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
 	sbatch \
 	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
 	--ntasks=$(SIMULATION_NTASKS) \
 	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
 	$(PROGNOSTIC_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -338,10 +558,108 @@ ml_corrected_run: ml_corrected_run_config
 	$(SIMULATION_ROOT)/ml-corrected
 
 
+ml_corrected_run2_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(ML_CORRECTED_RUN2_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(ML_CORRECTED_RUN2_CONFIG)
+
+
+ml_corrected_run2: ml_corrected_run2_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(ML_CORRECTED_RUN2_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/ml-corrected2
+
+
+ml_corrected_run3_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(ML_CORRECTED_RUN3_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(ML_CORRECTED_RUN3_CONFIG)
+
+
+ml_corrected_run3: ml_corrected_run3_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(ML_CORRECTED_RUN3_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/ml-corrected3
+
+
+ml_corrected_run4_config:
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(FILL_PROGNOSTIC_RUN_CONFIG_SCRIPT) \
+	$(ML_CORRECTED_RUN4_TEMPLATE) \
+	$(FV3CONFIG_REFERENCE_DIR) \
+	$(MODELS) \
+	$(PRESCRIBER_DATASETS) \
+	$(RESTARTS_ROOT) \
+	$(ML_CORRECTED_RUN4_CONFIG)
+
+
+ml_corrected_run4: ml_corrected_run4_config
+	SBATCH_TIMELIMIT=5:00:00 \
+	SLURM_NTASKS=$(SIMULATION_NTASKS) \
+	SLURM_LOG_DIR=$(SLURM_LOG_DIR) \
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/prognostic-run-%j.out \
+	--ntasks=$(SIMULATION_NTASKS) \
+	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+	--cluster=c5 \
+	--qos=urgent \
+	$(PROGNOSTIC_RUN) \
+	$(ROOT) \
+	$(PROGNOSTIC_RUN_ENVIRONMENT) \
+	$(PROGNOSTIC_RUN) \
+	$(ML_CORRECTED_RUN4_CONFIG) \
+	$(SIMULATION_SEGMENTS) \
+	$(SIMULATION_ROOT)/ml-corrected4
+
+
 # ML datasets; we can only run these rules after running the nudged simulation,
 # which generates the data we use for ML training, validation, and testing.
 flux_training_validation_testing_zarr:
-	sbatch -W --output=$(SLURM_LOG_DIR)/radiative-flux-dataset-%j.out --time=01:00:00 --mem-per-cpu=8G \
+	sbatch -W --output=$(SLURM_LOG_DIR)/radiative-flux-dataset-%j.out --time=01:00:00 \
+	--cluster=c5 \
+	--qos=debug \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -456,7 +774,9 @@ netcdf_batches: fill_data_mapper_templates flux_training_validation_testing_zarr
 
 netcdf_batches_training: $(addsuffix _netcdf_batches_training, $(PREDICTAND_SETS))
 %_netcdf_batches_training:
-	sbatch --output=$(SLURM_LOG_DIR)/batches-%j.out --time=01:00:00 --mem-per-cpu=16G \
+	sbatch --output=$(SLURM_LOG_DIR)/batches-%j.out --time=02:00:00 \
+	--cluster=c5 \
+	--qos=urgent \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(FV3NET_IMAGE_ENVIRONMENT) \
@@ -467,7 +787,9 @@ netcdf_batches_training: $(addsuffix _netcdf_batches_training, $(PREDICTAND_SETS
 
 netcdf_batches_validation: $(addsuffix _netcdf_batches_validation, $(PREDICTAND_SETS))
 %_netcdf_batches_validation:
-	sbatch --output=$(SLURM_LOG_DIR)/batches-%j.out --time=01:00:00 --mem-per-cpu=16G \
+	sbatch --output=$(SLURM_LOG_DIR)/batches-%j.out --time=01:00:00 \
+	--cluster=c5 \
+	--qos=debug \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(FV3NET_IMAGE_ENVIRONMENT) \
@@ -505,8 +827,10 @@ netcdf_batches_config_validation: $(addsuffix _netcdf_batches_config_validation,
 # training and validation datasets.
 train: netcdf_batches_config $(addprefix train_, $(PREDICTAND_SETS))
 train_%:
-	TMPDIR=/scratch/cimes/$(USER)/scratch \
-	sbatch --output=$(SLURM_LOG_DIR)/train-%j.out --time=16:00:00 --mem-per-cpu=16G \
+	TMPDIR=/gpfs/f5/gfdl_w/scratch/$(USER)/tmp \
+	sbatch --output=$(SLURM_LOG_DIR)/train-%j.out --time=16:00:00 \
+	--cluster=c5 \
+	--qos=urgent \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -522,6 +846,8 @@ train_%:
 offline_report: $(addprefix offline_report_, $(PREDICTAND_SETS))
 offline_report_%:
 	sbatch --output=$(SLURM_LOG_DIR)/offline-report-%j.out \
+	--cluster=c5 \
+	--qos=urgent \
 	$(OFFLINE_REPORT) \
 	$(ROOT) \
 	$(FV3NET_IMAGE_ENVIRONMENT) \
@@ -536,7 +862,9 @@ offline_report_%:
 
 
 vertically_interpolated_reference:
-	sbatch -W --output=$(SLURM_LOG_DIR)/interpolate-%j.out --time=03:00:00 --mem-per-cpu=16G \
+	sbatch -W --output=$(SLURM_LOG_DIR)/interpolate-%j.out --time=03:00:00 \
+	--cluster=c5 \
+	--qos=urgent \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -549,6 +877,8 @@ vertically_interpolated_reference:
 prognostic_run_diags: vertically_interpolated_reference $(addprefix prognostic_run_diags_, $(SIMULATIONS))
 prognostic_run_diags_%:
 	sbatch --output=$(SLURM_LOG_DIR)/prognostic-run-diags-%j.out \
+	--cluster=c5 \
+	--qos=urgent \
 	$(PROGNOSTIC_RUN_DIAGS) \
 	$(ROOT) \
 	$(FV3NET_IMAGE_ENVIRONMENT) \
@@ -568,13 +898,14 @@ prognostic_run_rundirs:
 
 
 prognostic_run_report: prognostic_run_rundirs
-	TMPDIR=/scratch/cimes/$(USER)/scratch \
+	TMPDIR=/gpfs/f5/gfdl_w/scratch/$(USER)/tmp \
 	MPLBACKEND=Agg \
 	sbatch \
 	--output=$(SLURM_LOG_DIR)/prognostic-run-report-%j.out \
 	--time=06:00:00 \
-	--mem-per-cpu=8G \
 	--ntasks=4 \
+	--cluster=c5 \
+	--qos=urgent \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(FV3NET_IMAGE_ENVIRONMENT) \
