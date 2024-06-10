@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --time=10:00:00
-#SBATCH --mem-per-cpu=32G
+
 set -e
 
 ROOT=$1
@@ -14,7 +14,7 @@ COMMIT_SHA=$8
 TRAINING_CONFIG=$9
 TRAINING_DATA_CONFIG=${10}
 
-PLATFORM=stellar
+PLATFORM=gaea-c5
 FV3NET_DIR=${ROOT}/fv3net
 INSTALL_PREFIX=${ROOT}/install
 
@@ -24,14 +24,14 @@ source ${FV3NET_DIR}/.environment-scripts/activate_environment.sh \
     ${INSTALL_PREFIX} \
     ${CONDA_ENVIRONMENT}
 
-export TMPDIR=/scratch/cimes/${USER}/scratch
+export TMPDIR=/gpfs/f5/gfdl_w/scratch/$(USER)/tmp
 export MPLBACKEND=Agg  # Required for running non-interactively
 
 python -m fv3net.diagnostics.offline.compute \
        "${MODEL}" \
        "${TEST_DATA_CONFIG}" \
        "${DIAGS_OUTPUT}" \
-       "${COMPUTE_FLAGS}"
+       "${COMPUTE_FLAGS}" --evaluation-grid=c384
 python -m fv3net.diagnostics.offline.views.create_report \
        "${DIAGS_OUTPUT}" \
        "${REPORT_OUTPUT}" \

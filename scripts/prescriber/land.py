@@ -16,13 +16,13 @@ from utils import cast_to_double
 logging.basicConfig(level=logging.INFO)
 
 
-TIMESTEP_SECONDS = 900.0
+TIMESTEP_SECONDS = 450.0
 M_PER_MM = 1.0 / 1000.0
 
-DAYS = 42
+DAYS = 92
 RESTARTS_PER_DAY = 8
 RESTART_PERIODS = DAYS * RESTARTS_PER_DAY
-START_DATE = cftime.DatetimeJulian(2020, 1, 29)
+START_DATE = cftime.DatetimeJulian(2020, 1, 19)
 END_DATE = START_DATE + datetime.timedelta(days=DAYS)
 RENAME = {
     "DSWRFsfc": "override_for_time_adjusted_total_sky_downward_shortwave_flux_at_surface",

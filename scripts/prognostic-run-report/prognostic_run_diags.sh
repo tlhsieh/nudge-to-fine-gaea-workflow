@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --time=06:00:00
-#SBATCH --mem-per-cpu=8G
 #SBATCH --ntasks=4
 
 ROOT=$1
@@ -9,7 +8,7 @@ RUN=$3
 FLAGS=$4
 DESTINATION=$5
 
-PLATFORM=stellar
+PLATFORM=gaea-c5
 FV3NET_DIR=${ROOT}/fv3net
 INSTALL_PREFIX=${ROOT}/install
 
@@ -19,7 +18,7 @@ source ${FV3NET_DIR}/.environment-scripts/activate_environment.sh \
     ${INSTALL_PREFIX} \
     ${CONDA_ENVIRONMENT}
 
-export TMPDIR=/scratch/cimes/skclark/scratch
+export TMPDIR=/gpfs/f5/gfdl_w/scratch/$(USER)/tmp
 export MPLBACKEND=Agg  # Required for running non-interactively
 
 DIAGS="${DESTINATION}/diags.nc"

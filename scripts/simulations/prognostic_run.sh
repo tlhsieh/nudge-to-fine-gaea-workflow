@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export DGLBACKEND=pytorch
+
 ROOT=$1
 CONDA_ENVIRONMENT=$2
 SCRIPT=$3
@@ -8,7 +10,7 @@ CONFIG=$4
 SEGMENTS=$5
 DESTINATION=$6
 
-PLATFORM=stellar
+PLATFORM=gaea-c5
 FV3NET_DIR=${ROOT}/fv3net
 INSTALL_PREFIX=${ROOT}/install
 
@@ -20,7 +22,7 @@ export TMPDIR=${WORK}
 
 SEGMENT_CONFIG=${DESTINATION}/fv3config.yml
 
-source ${FV3NET_DIR}/external/fv3gfs-fortran/FV3/conf/modules.fv3.stellar
+source ${FV3NET_DIR}/external/fv3gfs-fortran/FV3/conf/modules.fv3.gaea-c5
 source ${FV3NET_DIR}/.environment-scripts/activate_environment.sh \
     ${PLATFORM} \
     ${FV3NET_DIR} \
@@ -68,6 +70,8 @@ then
       --output=${SLURM_LOG_DIR}/prognostic-run-%j.out \
       --ntasks=${SLURM_NTASKS} \
       --export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
+      --cluster=c5 \
+      --qos=urgent \
       ${SCRIPT} \
       ${ROOT} \
       ${CONDA_ENVIRONMENT} \

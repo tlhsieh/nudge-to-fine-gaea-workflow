@@ -5,7 +5,8 @@ ENVIRONMENT_NAME=$2
 FV3NET_DIR=${ROOT}/fv3net
 SCRIPTS=${FV3NET_DIR}/.environment-scripts
 
-module load anaconda3/2022.10
+module load python/3.9 # Gaea-C5
+# module load anaconda3/2022.10 # Stellar
 eval "$(conda shell.bash hook)"
 
 cd $FV3NET_DIR

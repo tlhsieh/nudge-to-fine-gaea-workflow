@@ -4,7 +4,7 @@ CONDA_ENVIRONMENT=$2
 COMMAND=$3
 
 FV3NET_DIR=${ROOT}/fv3net
-PLATFORM=stellar
+PLATFORM=gaea-c5
 INSTALL_PREFIX=${ROOT}/install
 
 source ${FV3NET_DIR}/.environment-scripts/activate_environment.sh \

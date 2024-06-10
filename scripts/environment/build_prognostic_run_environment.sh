@@ -9,7 +9,7 @@ CALLPYFORT=""
 
 bash $FV3NET_DIR/.environment-scripts/setup_environment.sh \
     all \
-    stellar \
+    gaea-c5 \
     $CLONE_PREFIX \
     $INSTALL_PREFIX \
     $FV3NET_DIR \

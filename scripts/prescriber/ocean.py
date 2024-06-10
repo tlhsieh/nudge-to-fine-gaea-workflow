@@ -13,10 +13,10 @@ from utils import cast_to_double
 logging.basicConfig(level=logging.INFO)
 
 
-DAYS = 42
+DAYS = 92
 RESTARTS_PER_DAY = 8
 RESTART_PERIODS = DAYS * RESTARTS_PER_DAY
-START_DATE = "2020-01-29"
+START_DATE = "2020-01-19"
 FORMAT = "%Y%m%d.%H%M%S"
 RENAME_DIMS = {"xaxis_1": "x", "yaxis_1": "y"}
 RENAME_DATA_VARS = {
