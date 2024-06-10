@@ -21,10 +21,8 @@ ENVIRONMENT_SCRIPTS=$(SCRIPTS_DIR)/environment
 CATALOG_SCRIPTS=$(SCRIPTS_DIR)/catalog
 CATALOG_DIR=$(SCRATCH_ROOT)/catalog
 COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data_C384.sh
-# COPY_CATALOG_REFERENCE_DATA=$(CATALOG_SCRIPTS)/copy_reference_data.sh
 FILL_CATALOG_TEMPLATE=$(CATALOG_SCRIPTS)/fill_template.py
 CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog_C384.yaml
-# CATALOG_TEMPLATE=$(CONFIG_TEMPLATES)/catalog.yaml
 CATALOG=$(CONFIG_DIR)/catalog.yaml
 
 # Verification data
@@ -56,7 +54,7 @@ FILL_BATCHES_TEMPLATE=$(TRAINING_SCRIPTS)/fill_batches_template.py
 GENERATE_RADIATIVE_FLUX_DATASET=$(TRAINING_SCRIPTS)/generate_radiative_flux_dataset.py
 RADIATIVE_FLUX_DATASET=$(ML_DATA_ROOT)/radiative-fluxes.zarr
 
-ML_DATA_ROOT=$(SCRATCH_ROOT)/ml-data
+ML_DATA_ROOT=$(SCRATCH_ROOT)/ml-data_sfc1000_no0202-04
 ML_TRAINING_DATA=$(ML_DATA_ROOT)/training
 ML_VALIDATION_DATA=$(ML_DATA_ROOT)/validation
 
@@ -94,16 +92,16 @@ TRAINING_BATCHES_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-batches-training.yaml
 VALIDATION_BATCHES_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-batches-validation.yaml
 
 # Model training
-MODELS=$(SCRATCH_ROOT)/models
+MODELS=$(SCRATCH_ROOT)/models_sfc1000_no0202-04
 PREDICTAND_SETS = tq uv fluxes
-TRAINING_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-model.yaml
+TRAINING_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-model.yaml e.g. model_seed1.yaml
 MODEL_WILDCARD=$(MODELS)/$*-model
 TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 
 # Simulations
 SIMULATION_NTASKS=384# 384 864 1536
-SIMULATION_SEGMENTS=8
+SIMULATION_SEGMENTS=2
 SIMULATION_SCRIPTS=$(SCRIPTS_DIR)/simulations
 PROGNOSTIC_RUN=$(SIMULATION_SCRIPTS)/prognostic_run.sh
 SIMULATIONS = baseline nudged ml-corrected
@@ -125,6 +123,7 @@ ML_CORRECTED_RUN_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected_C384_gaea.yaml
 ML_CORRECTED_RUN2_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected2_C384_gaea.yaml
 ML_CORRECTED_RUN3_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected3_C384_gaea.yaml
 ML_CORRECTED_RUN4_TEMPLATE=$(CONFIG_TEMPLATES)/ml-corrected4_C384_gaea.yaml
+
 BASELINE_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline.yaml
 BASELINE_RUN2_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline2.yaml
 BASELINE_RUN3_CONFIG=$(SIMULATION_CONFIG_DIR)/baseline3.yaml
@@ -137,19 +136,6 @@ ML_CORRECTED_RUN_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected.yaml
 ML_CORRECTED_RUN2_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected2.yaml
 ML_CORRECTED_RUN3_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected3.yaml
 ML_CORRECTED_RUN4_CONFIG=$(SIMULATION_CONFIG_DIR)/ml-corrected4.yaml
-
-BASELINE_RUN=$(SIMULATION_ROOT)/baseline
-BASELINE_RUN2=$(SIMULATION_ROOT)/baseline2
-BASELINE_RUN3=$(SIMULATION_ROOT)/baseline3
-BASELINE_RUN4=$(SIMULATION_ROOT)/baseline4
-NUDGED_RUN=$(SIMULATION_ROOT)/nudged
-NUDGED_RUN2=$(SIMULATION_ROOT)/nudged2
-NUDGED_RUN3=$(SIMULATION_ROOT)/nudged3
-NUDGED_RUN4=$(SIMULATION_ROOT)/nudged4
-ML_CORRECTED_RUN=$(SIMULATION_ROOT)/ml-corrected
-ML_CORRECTED_RUN2=$(SIMULATION_ROOT)/ml-corrected2
-ML_CORRECTED_RUN3=$(SIMULATION_ROOT)/ml-corrected3
-ML_CORRECTED_RUN4=$(SIMULATION_ROOT)/ml-corrected4
 
 # Offline reports
 OFFLINE_REPORT=$(TRAINING_SCRIPTS)/offline_report.sh
@@ -244,9 +230,9 @@ prescriber_datasets: ocean_prescriber_dataset land_prescriber_dataset
 
 
 ocean_prescriber_dataset:
-	sbatch --output=$(SLURM_LOG_DIR)/ocean-prescriber-dataset-%j.out --time=01:00:00 \
+	sbatch --output=$(SLURM_LOG_DIR)/ocean-prescriber-dataset-%j.out --time=03:00:00 \
 	--cluster=c5 \
-	--qos=debug \
+	--qos=urgent \
 	$(CONDA_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -331,7 +317,7 @@ baseline_run2: baseline_run2_config
 	$(PROGNOSTIC_RUN) \
 	$(BASELINE_RUN2_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/baseline2
+	$(SIMULATION_ROOT)/baseline_01290600_6day
 
 
 baseline_run3_config:
@@ -363,7 +349,7 @@ baseline_run3: baseline_run3_config
 	$(PROGNOSTIC_RUN) \
 	$(BASELINE_RUN3_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/baseline3
+	$(SIMULATION_ROOT)/baseline_01291200_6day
 
 
 baseline_run4_config:
@@ -395,7 +381,7 @@ baseline_run4: baseline_run4_config
 	$(PROGNOSTIC_RUN) \
 	$(BASELINE_RUN4_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/baseline4
+	$(SIMULATION_ROOT)/baseline_01290900_6day
 
 
 nudged_run_config:
@@ -420,7 +406,7 @@ nudged_run: nudged_run_config
 	--ntasks=$(SIMULATION_NTASKS) \
 	--export=SLURM_LOG_DIR,SBATCH_TIMELIMIT,SLURM_NTASKS \
 	--cluster=c5 \
-	--qos=urgent \
+	--qos=normal \
 	$(PROGNOSTIC_RUN) \
 	$(ROOT) \
 	$(PROGNOSTIC_RUN_ENVIRONMENT) \
@@ -587,7 +573,7 @@ ml_corrected_run2: ml_corrected_run2_config
 	$(PROGNOSTIC_RUN) \
 	$(ML_CORRECTED_RUN2_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/ml-corrected2
+	$(SIMULATION_ROOT)/ml-corrected_0129_sfc1000_no0202-04_seed2
 
 
 ml_corrected_run3_config:
@@ -619,7 +605,7 @@ ml_corrected_run3: ml_corrected_run3_config
 	$(PROGNOSTIC_RUN) \
 	$(ML_CORRECTED_RUN3_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/ml-corrected3
+	$(SIMULATION_ROOT)/ml-corrected_0129_sfc1000_no0202-04_seed3
 
 
 ml_corrected_run4_config:
@@ -651,7 +637,7 @@ ml_corrected_run4: ml_corrected_run4_config
 	$(PROGNOSTIC_RUN) \
 	$(ML_CORRECTED_RUN4_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/ml-corrected4
+	$(SIMULATION_ROOT)/ml-corrected_0129_sfc1000_no0202-04
 
 
 # ML datasets; we can only run these rules after running the nudged simulation,
@@ -821,6 +807,18 @@ netcdf_batches_config_validation: $(addsuffix _netcdf_batches_config_validation,
 	$(BATCHES_CONFIG_TEMPLATE) \
 	$(ML_VALIDATION_DATA)/$* \
 	$(VALIDATION_BATCHES_CONFIG_WILDCARD)
+
+
+subsample_ml_data:
+	sbatch \
+	--output=$(SLURM_LOG_DIR)/balanced-datasets-%j.out \
+	--time=04:00:00 \
+	--cluster=c5 \
+	--qos=urgent \
+	$(CONDA_RUN) \
+	$(ROOT) \
+	$(FV3NET_IMAGE_ENVIRONMENT) \
+	python /ncrc/home2/Tsung-Lin.Hsieh/fv3net_helper/sample_netcdf_batches.py
 
 
 # ML training; we can only run these rules after generating the requisite

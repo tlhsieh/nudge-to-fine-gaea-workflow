@@ -1,0 +1,61 @@
+cache:
+  in_memory: false
+derived_output_variables:
+- downward_shortwave_sfc_flux_via_transmissivity
+- net_shortwave_sfc_flux_via_transmissivity
+hyperparameters:
+  callbacks:
+  - kwargs:
+      min_delta: 0.00049
+      monitor: val_loss
+      patience: 15
+      restore_best_weights: true
+    name: EarlyStopping
+  clip_config:
+    clip: {}
+  dense_network:
+    depth: 3
+    gaussian_noise: 0.0
+    kernel_regularizer:
+      kwargs:
+        l: 0.0001
+      name: l2
+    spectral_normalization: false
+    width: 419
+  input_variables:
+  - cos_zenith_angle
+  - surface_geopotential
+  - air_temperature
+  - specific_humidity
+  - latitude
+  loss:
+    loss_type: mae
+    scaling: standard
+    weight: 1.0
+  normalization_fit_samples: 8000
+  optimizer_config:
+    kwargs:
+      learning_rate: 4.9e-05
+    learning_rate_schedule: null
+    name: Adam
+  output_limit_config:
+    limits:
+      override_for_time_adjusted_total_sky_downward_longwave_flux_at_surface:
+        max: null
+        min: 0.0
+      shortwave_transmissivity_of_atmospheric_column:
+        max: 1.0
+        min: 0.0
+  output_variables:
+  - shortwave_transmissivity_of_atmospheric_column
+  - override_for_time_adjusted_total_sky_downward_longwave_flux_at_surface
+  training_loop:
+    batch_size: 512
+    epochs: 500
+    in_memory: true
+    shuffle_buffer_size: 50000
+  weights: null
+model_type: dense
+output_transforms: []
+random_seed: 1
+sample_dim_name: sample

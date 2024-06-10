@@ -2,13 +2,13 @@ base_version: v0.7
 field_table: {{ FV3CONFIG_REFERENCE_DIR }}/config/field_table/TKE-EDMF/v1.1/field_table
 initial_conditions:
   base_url: {{ RESTARTS_ROOT }}
-  timestep: "20200225.000000"
+  timestep: "20200129.000000"
   vertical_coordinate_file: {{ RESTARTS_ROOT }}/fv_core.res.nc
 orographic_forcing: {{ FV3CONFIG_REFERENCE_DIR }}/data/orographic_data/v1.0
 forcing: {{ FV3CONFIG_REFERENCE_DIR }}/data/base_forcing/v1.1
 prephysics:
   - dataset_key: {{ PRESCRIBER_DATASETS }}/ocean.zarr
-    reference_initial_time: "20200225.000000"
+    reference_initial_time: "20200119.000000"
     reference_frequency_seconds: 10800
     variables:
       ocean_surface_temperature: ocean_surface_temperature  # Duplicated implicitly when nudging
