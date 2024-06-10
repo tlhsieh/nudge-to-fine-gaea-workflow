@@ -80,6 +80,9 @@ timesteps:
 - '20200308.193000'
 - '20200308.223000'
 timesteps_per_batch: 10
+unstacked_dims:
+- z
+# subsample_ratio: 0.015625
 variable_names:
 - cos_zenith_angle
 - surface_geopotential

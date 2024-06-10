@@ -7,7 +7,7 @@ res: c384
 shuffle_samples: false
 shuffle_timesteps: false
 timesteps:
-- '20200204.013000'
+# - '20200204.013000'
 - '20200207.193000'
 - '20200211.073000'
 - '20200211.103000'
@@ -20,6 +20,7 @@ timesteps:
 timesteps_per_batch: 10
 unstacked_dims:
 - z
+# subsample_ratio: 0.015625
 variable_names:
 - cos_zenith_angle
 - surface_geopotential
