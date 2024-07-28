@@ -54,7 +54,7 @@ FILL_BATCHES_TEMPLATE=$(TRAINING_SCRIPTS)/fill_batches_template.py
 GENERATE_RADIATIVE_FLUX_DATASET=$(TRAINING_SCRIPTS)/generate_radiative_flux_dataset.py
 RADIATIVE_FLUX_DATASET=$(ML_DATA_ROOT)/radiative-fluxes.zarr
 
-ML_DATA_ROOT=$(SCRATCH_ROOT)/ml-data_sfc1000_no0202-04
+ML_DATA_ROOT=$(SCRATCH_ROOT)/ml-data
 ML_TRAINING_DATA=$(ML_DATA_ROOT)/training
 ML_VALIDATION_DATA=$(ML_DATA_ROOT)/validation
 
@@ -92,15 +92,15 @@ TRAINING_BATCHES_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-batches-training.yaml
 VALIDATION_BATCHES_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-batches-validation.yaml
 
 # Model training
-MODELS=$(SCRATCH_ROOT)/models_sfc1000_no0202-04
+MODELS=$(SCRATCH_ROOT)/models
 PREDICTAND_SETS = tq uv fluxes
-TRAINING_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-model.yaml e.g. model_seed1.yaml
+TRAINING_CONFIG_WILDCARD=$(ML_CONFIG_DIR)/$*-model.yaml
 MODEL_WILDCARD=$(MODELS)/$*-model
 TRAIN=$(TRAINING_SCRIPTS)/train.sh
 
 
 # Simulations
-SIMULATION_NTASKS=384# 384 864 1536
+SIMULATION_NTASKS=384
 SIMULATION_SEGMENTS=2
 SIMULATION_SCRIPTS=$(SCRIPTS_DIR)/simulations
 PROGNOSTIC_RUN=$(SIMULATION_SCRIPTS)/prognostic_run.sh
@@ -349,7 +349,7 @@ baseline_run3: baseline_run3_config
 	$(PROGNOSTIC_RUN) \
 	$(BASELINE_RUN3_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/baseline_01291200_6day
+	$(SIMULATION_ROOT)/baseline_01290900_6day
 
 
 baseline_run4_config:
@@ -381,7 +381,7 @@ baseline_run4: baseline_run4_config
 	$(PROGNOSTIC_RUN) \
 	$(BASELINE_RUN4_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/baseline_01290900_6day
+	$(SIMULATION_ROOT)/baseline_01291200_6day
 
 
 nudged_run_config:
@@ -573,7 +573,7 @@ ml_corrected_run2: ml_corrected_run2_config
 	$(PROGNOSTIC_RUN) \
 	$(ML_CORRECTED_RUN2_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/ml-corrected_0129_sfc1000_no0202-04_seed2
+	$(SIMULATION_ROOT)/ml-corrected_seed2
 
 
 ml_corrected_run3_config:
@@ -605,7 +605,7 @@ ml_corrected_run3: ml_corrected_run3_config
 	$(PROGNOSTIC_RUN) \
 	$(ML_CORRECTED_RUN3_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/ml-corrected_0129_sfc1000_no0202-04_seed3
+	$(SIMULATION_ROOT)/ml-corrected_seed3
 
 
 ml_corrected_run4_config:
@@ -637,7 +637,7 @@ ml_corrected_run4: ml_corrected_run4_config
 	$(PROGNOSTIC_RUN) \
 	$(ML_CORRECTED_RUN4_CONFIG) \
 	$(SIMULATION_SEGMENTS) \
-	$(SIMULATION_ROOT)/ml-corrected_0129_sfc1000_no0202-04
+	$(SIMULATION_ROOT)/ml-corrected_seed4
 
 
 # ML datasets; we can only run these rules after running the nudged simulation,

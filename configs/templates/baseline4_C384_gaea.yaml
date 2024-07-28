@@ -2,7 +2,7 @@ base_version: v0.7
 field_table: {{ FV3CONFIG_REFERENCE_DIR }}/config/field_table/TKE-EDMF/v1.1/field_table
 initial_conditions:
   base_url: {{ RESTARTS_ROOT }}
-  timestep: "20200129.090000"
+  timestep: "20200129.120000"
   vertical_coordinate_file: {{ RESTARTS_ROOT }}/fv_core.res.nc
 orographic_forcing: {{ FV3CONFIG_REFERENCE_DIR }}/data/orographic_data/v1.0
 forcing: {{ FV3CONFIG_REFERENCE_DIR }}/data/base_forcing/v1.1
